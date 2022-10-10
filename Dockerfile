@@ -1,7 +1,7 @@
 FROM debian:bullseye
 
-ENV DOCKER_NET="docker0"
-ENV DEBIAN_FRONTEND="noninteractive"
+ENV DOCKER_NET docker0
+ENV DEBIAN_FRONTEND noninteractive
 
 # TODO: figure out how Redsocks user config works.
 # (no documentation provided, and when compiling from source, necessary UID/GID magic is not set up)
@@ -16,4 +16,4 @@ COPY redsocks.conf /etc/redsocks.conf
 # For compiling on newer systems
 RUN make DISABLE_SHADOWSOCKS=true
 
-# ENTRYPOINT ["./rs2/redsocks2 -c /etc/redsocks.conf"]
+CMD sh -c "cd /rs2 && exec ./redsocks2 -c redsocks.conf"
