@@ -16,7 +16,7 @@ WORKDIR /rs2
 COPY redsocks.conf /etc/redsocks.conf
 COPY redsocks.conf /etc/redsocks.tmpl
 
-RUN make DISABLE_SHADOWSOCKS=true ENABLE_STATIC=true
+RUN make DISABLE_SHADOWSOCKS=true
 
 # Permissions
 RUN usermod -aG sudo redsocks
