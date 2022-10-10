@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND="noninteractive"
 
 WORKDIR /
 RUN apt-get update
-RUN apt-get install -y build-essential libevent libevent-dev openssl iptables
+RUN apt-get install -y build-essential libevent-dev openssl libssl-dev iptables
 
 ADD . /rs2
 WORKDIR /rs2
