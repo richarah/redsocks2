@@ -7,18 +7,19 @@ ENV DEBIAN_FRONTEND noninteractive
 # (no documentation provided, and when compiling from source, necessary UID/GID magic is not set up)
 WORKDIR /
 RUN apt-get update
-RUN apt-get install -y build-essential libevent-dev openssl libssl-dev iptables redsocks sudo
+RUN apt-get install -y build-essential libevent-dev openssl libssl-dev iptables redsocks zlib1g zlib1g-dev sudo
 
 ADD . /rs2
 WORKDIR /rs2
+
+# Some confusion wrt. setup docs
 COPY redsocks.conf /etc/redsocks.conf
+COPY redsocks.conf /etc/redsocks.tmpl
 
-# For compiling on newer systems
-RUN make DISABLE_SHADOWSOCKS=true
-
+RUN make ENABLE_STATIC=true
 
 # Permissions
 RUN usermod -aG sudo redsocks
 RUN chmod +x redsocks2
 
-CMD sh -c "cd /rs2 && exec ./redsocks2 -c redsocks.conf"
+CMD sh -c "cd /rs2 && exec ./redsocks2"
