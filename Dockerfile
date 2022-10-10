@@ -22,4 +22,5 @@ RUN make ENABLE_STATIC=true
 RUN usermod -aG sudo redsocks
 RUN chmod +x redsocks2
 
+USER redsocks
 CMD sh -c "cd /rs2 && exec ./redsocks2"
