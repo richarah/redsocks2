@@ -1,8 +1,11 @@
-FROM alpine:3.16
+FROM debian:bullseye
+
+ENV DOCKER_NET="docker0"
+ENV DEBIAN_FRONTEND="noninteractive"
 
 WORKDIR /
-RUN apk update
-RUN apk add alpine-sdk libevent libevent-dev openssl openssl-dev iptables iptables-dev nss nss-dev
+RUN apt-get update
+RUN apt-get install -y build-essential libevent libevent-dev openssl openssl-dev iptables iptables-dev nss nss-dev
 
 ADD . /rs2
 WORKDIR /rs2
