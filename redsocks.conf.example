@@ -1,55 +1,20 @@
 base {
-	// debug: connection progress & client list on SIGUSR1
-	log_debug = off;
+  log_debug = off;
+  log_info = on;
+  log = "stderr";
+  daemon = off;
+  user = redsocks;
+  group = redsocks;
+  redirector = iptables;
+}
 
-	// info: start and end of client session
-	log_info = on;
+redsocks {
+  local_ip = 0.0.0.0;
+  local_port = 12345;
 
-	/* possible `log' values are:
-	 *   stderr
-	 *   "file:/path/to/file"
-	 *   syslog:FACILITY  facility is any of "daemon", "local0"..."local7"
-	 */
-	log = stderr;
-	// log = "file:/path/to/file";
-	// log = "syslog:local7";
-
-	// detach from console
-	daemon = off;
-
-	/* Change uid, gid and root directory, these options require root
-	 * privilegies on startup.
-	 * Note, your chroot may requre /etc/localtime if you write log to syslog.
-	 * Log is opened before chroot & uid changing.
-	 * Debian, Ubuntu and some other distributions use `nogroup` instead of
-	 * `nobody`, so change it according to your system if you want redsocks
-	 * to drop root privileges.
-	 */
-	// user = nobody;
-	// group = nobody;
-	// chroot = "/var/chroot";
-
-	/* possible `redirector' values are:
-	 *   iptables   - for Linux
-	 *   ipf        - for FreeBSD
-	 *   pf         - for OpenBSD
-	 *   generic    - some generic redirector that MAY work
-	 */
-	redirector = iptables;
-
-	/* Override per-socket values for TCP_KEEPIDLE, TCP_KEEPCNT,
-	 * and TCP_KEEPINTVL. see man 7 tcp for details.
-	 * `redsocks' relies on SO_KEEPALIVE option heavily. */
-	//tcp_keepalive_time = 0;
-	//tcp_keepalive_probes = 0;
-	//tcp_keepalive_intvl = 0;
-
-	/* Enable or disable Linux 3.9+ specific socket option SO_REUSEPORT.
-	 * Some older versions of Linux like CentOS 6.5 (Kernel 2.6.32) also
-	 # support this option.
-	 * Default to off.
-	 */
-	reuseport = off;
+  type = socks5;
+  ip = 127.0.0.1;
+  port = 7777;
 }
 
 redsocks {
@@ -57,7 +22,7 @@ redsocks {
 	 * use 0.0.0.0 if you want to listen on every interface.
 	 * `bind' are used as ip:port to redirect to.
 	 */
-	bind = "127.0.0.1:12345";
+	bind = "0.0.0.0:12345";
 
 	// listen() queue length. Default value is SOMAXCONN and it should be
 	// good enough for most of us.
@@ -80,7 +45,7 @@ redsocks {
 	//     IPv4Address:port
 	//     IPv4Address
 	// If no port is given, 0 is used. Usually, a valid port is required.
-	relay = "127.0.0.1:1080";
+	relay = "127.0.0.1:7777";
 
 	// known types: socks4, socks5, http-connect, http-relay
 	// New types: direct, shadowsocks, https-connect
@@ -154,25 +119,6 @@ tcpdns {
 	tcpdns1 = "8.8.4.4:53";    // DNS server that supports TCP DNS requests
 	tcpdns2 = "8.8.8.8" ;      // DNS server that supports TCP DNS requests
 	timeout = 4;               // Timeout value for TCP DNS requests
-}
-
-autoproxy {
-    // Specify interface for outgoing connections.
-    // This is useful when you have multiple connections to
-    // internet or when you have VPN connections.
-    // interface = wlan0;
-
-    no_quick_check_seconds = 60; // Directly relay traffic to proxy if an IP
-                                 // is found blocked in cache and it has been
-                                 // added into cache no earlier than this
-                                 // specified number of seconds.
-                                 // Set it to 0 if you do not want to perform
-                                 // quick check when an IP is found in blocked
-                                 // IP cache, thus the connection will be
-                                 // redirected to proxy immediately.
-    quick_connect_timeout = 3;   // Timeout value when performing quick
-                                 // connection check if an IP is found blocked
-                                 // in cache.
 }
 
 ipcache {
